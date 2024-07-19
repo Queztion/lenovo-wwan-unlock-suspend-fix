@@ -24,10 +24,6 @@ if [ -n "$Rplus_check" ] || [ -n "$FM350_check" ] || [ -n "$RM520_check" ] || [ 
 	stand_ver="1.23.2"
 
 
-	if grep -q 'test-quick-suspend-resume' <<< $USR_SBIN_QUICKSUSPEND; then
-		bool_suspend_fix_supported=true
-	fi
-
 	if grep -q 'test-low-power-suspend-resume' <<< $USR_SBIN_LOWPOWER; then
 		bool_suspend_fix_supported=true
 	fi
