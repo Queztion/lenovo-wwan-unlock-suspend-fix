@@ -10,8 +10,8 @@ RM520_check=$(lspci -d :1007)
 EM160R_check=$(lspci -d :100d)
 CURRENT_CONFIG=$(cat "$SERVICE_FILE")
 
-USR_SBIN_QUICKSUSPEND="/usr/sbin/ModemManager --help | grep test-quick-suspend-resume"
-USR_SBIN_LOWPOWER="/usr/sbin/ModemManager --help | grep test-low-power-suspend-resume"
+# if ModemManager supports suspend fix, test-low-power-suspend-resume should be available
+USR_SBIN_LOWPOWER=$(/usr/sbin/ModemManager --help)
 bool_suspend_fix_supported=false
 
 restart_mm_service=false
@@ -23,14 +23,13 @@ if [ -n "$Rplus_check" ] || [ -n "$FM350_check" ] || [ -n "$RM520_check" ] || [ 
 	curmmvernum=$(echo $first_line | cut -d " " -f2)
 	stand_ver="1.23.2"
 
-
-	if grep -q 'test-low-power-suspend-resume' <<< $USR_SBIN_LOWPOWER; then
+	# Check if test-low-power-suspend-resume is available in ModemManager
+	if grep -q 'test-low-power-suspend-resume' <<< $USR_SBIN_LOWPOWER1; then
 		bool_suspend_fix_supported=true
 	fi
 
-	
-	if $bool_suspend_fix_supported; then
-		# echo $bool_suspend_fix_supported
+
+	if [ "$bool_suspend_fix_supported" == "true" ]; then
 		if grep -q 'test-quick-suspend-resume' <<< "$CURRENT_CONFIG";then
 			echo "test-quick-suspend-resume parameter already exists"
 		else
@@ -51,7 +50,6 @@ if [ -n "$Rplus_check" ] || [ -n "$FM350_check" ] || [ -n "$RM520_check" ] || [ 
 			sudo systemctl restart ModemManager
 		fi
 	else
-		#echo "Fix supports ModemManager version greater than 1.23.2 or later only."
 		echo "Please download ModemManager 1.23.2 or later as it contains patches for Suspend Issue Fix."
 	fi
 else
