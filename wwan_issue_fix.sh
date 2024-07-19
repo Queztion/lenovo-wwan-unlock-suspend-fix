@@ -24,7 +24,7 @@ if [ -n "$Rplus_check" ] || [ -n "$FM350_check" ] || [ -n "$RM520_check" ] || [ 
 	stand_ver="1.23.2"
 
 	# Check if test-low-power-suspend-resume is available in ModemManager
-	if grep -q 'test-low-power-suspend-resume' <<< $USR_SBIN_LOWPOWER1; then
+	if grep -q 'test-low-power-suspend-resume' <<< $USR_SBIN_LOWPOWER; then
 		bool_suspend_fix_supported=true
 	fi
 
